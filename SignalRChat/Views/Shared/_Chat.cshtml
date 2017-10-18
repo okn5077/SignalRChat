@@ -1,0 +1,37 @@
+﻿
+
+@{
+    ViewBag.Title = "_Chat";
+}
+
+
+<div id="chatWindowContainer" class="w3-container container">
+    @if (this.User.IsInRole("Representative"))
+    {
+        <div class="w3-container online-user-list">
+            <ul></ul>
+        </div>
+    }
+    else
+    {
+        <div class="w3-container online-user-list" style="display:none">
+            <ul></ul>
+        </div>
+    }
+
+    <div class="w3-container chat-content container">
+
+        <div class="w3-container input-container">
+            <div style="float: left; width: 1%; padding: 4px">
+                <input disabled type="text" style="width: 100%;display:none;" id="txtTo" />
+            </div>
+            <div style="float: left; width: 60%; padding: 4px">
+                <textarea type="text" style="width: 100%" id="txtMsg"></textarea>
+            </div>
+            <div style="float: left;  padding: 4px">
+                <input class="w3-button" type="button" id="btnSend" value="Send Message" style="width: 45px" />
+            </div>
+        </div>
+    </div>
+</div>
+

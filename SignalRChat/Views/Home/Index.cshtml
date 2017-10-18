@@ -1,0 +1,237 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<script id="PMRight" type="text/x-kendo-template">
+    <p class="triangle-right right">#= data #</p>
+</script>
+
+<script id="PMLeft" type="text/x-kendo-template">
+    <p class="triangle-right left">#= data #</p>
+</script>
+
+
+<script>
+
+    function openChat() {
+        $("#ChatWindow").data("kendoWindow").open();
+        chatProxy.server.goOnline();
+    }
+
+</script>
+
+@this.User.Identity.Name
+
+
+<h2>Index</h2>
+
+@(Html.Kendo().Window()
+        .Name("ChatWindow")
+        .Width(1000)
+        .Height(500)
+        .Draggable()
+        .Resizable()
+        .Title("Online Chat")
+        .Visible(false)
+        //.Actions(actions => actions.Pin().Refresh().Maximize().Close())
+        .Events(events => events
+            .Open("onOpen")
+            .Close("onClose")
+        )
+        .LoadContentFrom("Chat", "Home")
+)
+
+@if (this.User.IsInRole("Representative"))
+{
+    <button class="online-chat w3-button" onclick="openChat()">Online Chat</button>
+}
+else
+{
+    <button disabled class="online-chat w3-button" onclick="openChat()">Online Chat</button>
+}
+
+
+<script>
+    var UserType = {
+        Customer: 1,
+        Representative: 2,
+    }
+
+    var ConnectionType = {
+        Connected: 1,
+        Disconnected: 2,
+        Online: 3,
+    }
+
+    function onOpen(e) {
+        debugger;
+        $(".online-chat").attr("disabled", true);
+    }
+
+    function onClose(e) {
+        debugger;
+        var chatProxy = $.connection.ChatHub;
+        //$.connection.hub.stop();
+        chatProxy.server.goOffline();
+        $(".online-chat").removeAttr("disabled");
+    }
+
+    function SwitchElement(selector, disable) {
+        if (disable) {
+            $("#" + selector + "_CI").attr("disabled", true);
+            $("#" + selector + "_CI").addClass("disabledbutton");
+        }
+        else {
+            $("#" + selector + "_CI").remove("disabled");
+            $("#" + selector + "_CI").removeClass("disabledbutton");
+        }
+    }
+
+    function StartHub() {
+        $.connection.hub.start().done(function () {
+            $("body").on("click", "#btnSend", function () {
+                debugger;
+                if ($("#chatWindowContainer").attr("selfName") && $("#txtMsg").val() && $("#txtTo").text()) {
+                    chatProxy.server.privatemessage($("#chatWindowContainer").attr("selfName"), $("#txtMsg").val(), $("#txtTo").text());
+                }
+                $('#txtMsg').val('').focus();
+            });
+        });
+    }
+
+    var chatProxy = $.connection.ChatHub;
+
+    $.connection.hub.disconnected(function () {
+        debugger;
+        setTimeout(function () {
+            StartHub();
+        }, 2000);
+    });
+
+    function AppendPM(element, templateName, msg) {
+        var Template = kendo.template($(templateName).html());
+        var result = Template(msg);
+        $(element).append(result)
+        $(element).animate({ scrollTop: 10000 }, 1600);
+    }
+
+    $(function () {
+        debugger;
+
+        chatProxy.client.receiveMessage = function (msgFrom, msg, msgTo, self) {
+            debugger;
+
+            if (self) {
+                AppendPM("#" + msgTo + "_CI", "#PMRight", msg);
+            }
+            else {
+                AppendPM("#" + msgFrom + "_CI", "#PMLeft", msg);
+            }
+
+            if ($("#txtTo").text() != msgFrom) {
+                $("#" + msgFrom + "_LI").attr("newItem", true);
+            }
+
+        };
+
+        chatProxy.client.informUser = function (userName, connType, selfType) {
+            debugger;
+            if (selfType == UserType.Customer) {
+                if (connType == ConnectionType.Online) {
+                    if ($("#" + userName + "_LI").length == 0) {
+                        $(".online-user-list ul").append("<li user=" + userName + "  id=" + userName + "_LI>" + userName + "</li>");
+                    }
+                    if ($("#" + userName + "_CI").length == 0) {
+                        $(".chat-content").prepend("<div user=" + userName + "  id=" + userName + "_CI class='chat-scroll chat-container'> </div>");
+                    }
+
+                    if (userName == $("#txtTo").text()) {
+                        SwitchElement(userName, true);
+                    }
+                }
+                else if (connType != ConnectionType.Online) {
+                    $("#" + userName + "_LI").remove();
+
+                    if (userName == $("#txtTo").text()) {
+                        SwitchElement(userName, false);
+                    }
+                }
+            }
+            if (selfType == UserType.Representative) {
+                if (connType == ConnectionType.Online) {
+                    if ($("#" + userName + "_LI").length == 0) {
+                        $(".online-user-list ul").append("<li user=" + userName + " id=" + userName + "_LI>" + userName + "</li>");
+                    }
+                    if ($("#" + userName + "_CI").length == 0) {
+                        $(".chat-content").prepend("<div user=" + userName + "  id=" + userName + "_CI class='chat-scroll chat-container'> </div>");
+                        $(".chat-container").show();
+                    }
+
+                    $(".online-chat").removeAttr("disabled");
+                    $("#chatWindowContainer").removeClass("disabledbutton");
+                }
+                else if (connType != ConnectionType.Online) {
+                    $("#" + userName + "_LI").remove();
+                    $(".online-chat").attr("disabled", true);
+                    $("#chatWindowContainer").addClass("disabledbutton");
+                }
+            }
+        };
+
+        chatProxy.client.informCustomer = function (connType) {
+            debugger;
+            if (connType == ConnectionType.Online) {
+                $(".online-chat").removeAttr("disabled");
+                $("#chatWindowContainer").removeClass("disabledbutton");
+            }
+            else if (connType != ConnectionType.Online) {
+                $(".online-chat").attr("disabled", true);
+                $("#chatWindowContainer").addClass("disabledbutton");
+            }
+        };
+
+        chatProxy.client.informSelf = function (userNames, selfName, selfType) {
+            debugger;
+            $("#chatWindowContainer").attr("selfName", selfName)
+            if (selfType == UserType.Representative) {
+                $(".online-user-list ul li").remove();
+            }
+
+            userNames.forEach(function (userName) {
+                if ($("#" + userName + "_LI").length == 0) {
+                    $(".online-user-list ul").append("<li user=" + userName + "  id=" + userName + "_LI>" + userName + "</li>");
+                }
+                if ($("#" + userName + "_CI").length == 0) {
+                    $(".chat-content").prepend("<div  user=" + userName + " id=" + userName + "_CI class='chat-scroll chat-container'> </div>");
+                }
+            });
+
+            if (selfType == UserType.Customer && userNames.length > 0) {
+                $(".chat-container").show();
+                $(".online-user-list li").click();
+                $(".online-chat").removeAttr("disabled");
+            }
+        };
+
+        StartHub();
+
+    });
+
+    $("body").on("click", "li", function () {
+        debugger;
+        var toUserName = $(this).attr("user");
+        $(".online-user-list").removeAttr("selected");
+        $(this).attr("selected", true);
+        $("#txtTo").text(toUserName);
+        $(".chat-content .chat-container").hide();
+        $("#" + toUserName + "_CI").show();
+        $(this).removeAttr("newItem");
+
+        $(".online-chat").removeAttr("disabled");
+        $("#chatWindowContainer").removeClass("disabledbutton");
+    });
+
+
+
+</script>

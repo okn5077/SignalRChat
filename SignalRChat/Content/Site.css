@@ -1,0 +1,296 @@
+﻿.w3-container {
+    position: relative;
+    width: 80%;
+    margin: auto;
+}
+
+    .w3-container input {
+        width: 100% !important;
+    }
+
+.accountForm {
+    width: 75%;
+    margin: auto;
+    position: relative;
+    top: 50px;
+}
+
+.control-label {
+    text-align: left !important;
+    width: 20% !important;
+}
+
+.col-md-10 {
+    width: 75% !important;
+}
+
+.k-textbox, .k-datetimepicker, .form-control {
+    width: 100% !important;
+}
+
+
+
+@keyframes newItem {
+    0% {
+        background-color: lightgreen;
+    }
+
+    50% {
+        background-color: darkgreen;
+    }
+
+    100% {
+        background-color: lightgreen;
+    }
+}
+
+
+
+.online-user-list {
+    position: absolute;
+    width: 20% !important;
+    left: 0px;
+    padding: 10px;
+    border: 1px solid lightgreen;
+    border-radius: 10px;
+}
+
+    .online-user-list ul {
+        list-style-type: none;
+        width: 80%;
+        border-radius: 10px;
+        color: white;
+        margin: auto;
+        padding: 0px;
+    }
+
+
+        .online-user-list ul li {
+            color: white;
+            cursor: pointer;
+            background-color: lightgreen;
+            color: white;
+            border-radius: 10px;
+            padding: 5px 20px;
+        }
+
+            .online-user-list ul li[selected] {
+                background-color: blue;
+                color: white;
+                background-color: green;
+                color: white;
+                border-radius: 10px;
+                padding: 5px 20px;
+            }
+
+            .online-user-list ul li[newItem] {
+                animation-name: newItem;
+                animation-duration: 1s;
+                animation-iteration-count: infinite;
+            }
+
+            .online-user-list ul li.to {
+                background-color: blueviolet;
+                color: white;
+            }
+
+            .online-user-list ul li.from {
+                background-color: brown;
+                color: white;
+            }
+
+.online-chat {
+    background-color: cadetblue !important;
+    color: white !important;
+    position: fixed !important;
+    bottom: 10px !important;
+    right: 10px !important;
+}
+
+    .online-chat[disabled] {
+        background-color: gray !important;
+        color: black !important;
+        bottom: 10px !important;
+        position: fixed !important;
+        right: 10px !important;
+    }
+
+/*
+ *  STYLE 15
+ */
+
+.chat-scroll::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
+    background-color: #F5F5F5;
+    border-radius: 10px;
+}
+
+.chat-scroll::-webkit-scrollbar {
+    width: 10px;
+    background-color: #F5F5F5;
+}
+
+.chat-scroll::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #FFF;
+    background-image: -webkit-gradient(linear, 40% 0%, 75% 84%, from(#4D9C41), to(#19911D), color-stop(.6,#54DE5D))
+}
+
+
+.disabledbutton {
+    pointer-events: none;
+    opacity: 0.4;
+}
+
+.chat-container {
+    width: 100%;
+    position: absolute;
+    display: none;
+    background-color: white;
+    height: 80% !important;
+    overflow-y: scroll;
+    color: white;
+    top: 0px;
+    border-radius: 10px;
+    border: 1px solid lightblue
+}
+
+.input-container {
+    width: 100%;
+    border-radius: 10px;
+    position: absolute;
+    background-color: white;
+    bottom: 0px;
+    padding: 0px !important;
+}
+
+.container {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+}
+
+.chat-content {
+    position: absolute;
+    right: 0px;
+    width: 75% !important;
+    padding: 0px !important;
+}
+
+
+
+
+
+#ChatWindow {
+    overflow: hidden !important;
+}
+
+
+#chatWindowContainer {
+    position: relative;
+    padding: 0px !important;
+}
+
+textarea {
+    resize: none;
+}
+
+
+/*#region MessageBox*/
+
+
+.triangle-right {
+    position: relative;
+    padding: 15px;
+    color: #fff;
+    background: #075698; /* default background for browsers without gradient support */
+    /* css3 */
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(#2e88c4), to(#075698));
+    background: -moz-linear-gradient(#2e88c4, #075698);
+    background: -o-linear-gradient(#2e88c4, #075698);
+    background: linear-gradient(#2e88c4, #075698);
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+
+
+    .triangle-right.top {
+        background: -webkit-gradient(linear, 0 0, 0 100%, from(#075698), to(#2e88c4));
+        background: -moz-linear-gradient(#075698, #2e88c4);
+        background: -o-linear-gradient(#075698, #2e88c4);
+        background: linear-gradient(#075698, #2e88c4);
+    }
+
+    /* Variant : for left positioned triangle
+------------------------------------------ */
+
+    .triangle-right.left {
+        margin-left: 40px;
+        background: lightgreen;
+        width: 50%;
+        float: left;
+    }
+
+    /* Variant : for right positioned triangle
+------------------------------------------ */
+
+    .triangle-right.right {
+        margin-right: 40px;
+        background: lightblue;
+        width: 50%;
+        float: right;
+    }
+
+    /* THE TRIANGLE
+------------------------------------------------------------------------------------------------------------------------------- */
+
+    .triangle-right:after {
+        content: "";
+        position: absolute;
+        bottom: -20px; /* value = - border-top-width - border-bottom-width */
+        left: 50px; /* controls horizontal position */
+        border-width: 20px 0 0 20px; /* vary these values to change the angle of the vertex */
+        border-style: solid;
+        border-color: #075698 transparent;
+        /* reduce the damage in FF3.0 */
+        display: block;
+        width: 0;
+    }
+
+    /* Variant : top
+------------------------------------------ */
+
+    .triangle-right.top:after {
+        top: -20px; /* value = - border-top-width - border-bottom-width */
+        right: 50px; /* controls horizontal position */
+        bottom: auto;
+        left: auto;
+        border-width: 20px 20px 0 0; /* vary these values to change the angle of the vertex */
+        border-color: transparent #075698;
+    }
+
+    /* Variant : left
+------------------------------------------ */
+
+    .triangle-right.left:after {
+        top: 16px;
+        left: -40px; /* value = - border-left-width - border-right-width */
+        bottom: auto;
+        border-width: 15px 40px 0 0; /* vary these values to change the angle of the vertex */
+        border-color: transparent lightgreen;
+    }
+
+    /* Variant : right
+------------------------------------------ */
+
+    .triangle-right.right:after {
+        top: 16px;
+        right: -40px; /* value = - border-left-width - border-right-width */
+        bottom: auto;
+        left: auto;
+        border-width: 15px 0 0 40px; /* vary these values to change the angle of the vertex */
+        border-color: transparent lightblue;
+    }
+
+/*#endregion MessageBox*/
