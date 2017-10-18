@@ -17,7 +17,8 @@ namespace SignalRChat
                 AuthenticationType = "ApplicationCookie",
                 LoginPath = new PathString("/Account/Login")
             });
-            // Any connection or hub wire up and configuration should go here
+            // Any connection or hub wire up and configuration should go here 
+
             app.MapSignalR();
 
 
